@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Tafsir Al-quran (New website)</title><meta name="title" content="Tafsir Al-quran (New website)"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="./style.css"><script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.js" async=""></script><script type="importmap">{
+  "imports": {}
+}</script></head><body>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Al-Quran Pro &amp; Tafsir</title>
+    
+    <!-- Font Arab & Font Awesome untuk Ikon -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0d9488;
+            --primary-hover: #0f766e;
+            --bg-color: #f0fdf4;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --subtext-color: #4b5563;
+            --border-color: #e5e7eb;
+            --arabic-font-size: 28px;
+        }
+
+        /* 3. Dark Mode Variables */
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --subtext-color: #cbd5e1;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* 8. Daily Verse Banner */
+        .daily-verse {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .daily-verse h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .controls-panel {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--subtext-color);
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        /* 7. Font Size Controls */
+        .font-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Audio & Card Styles */
+        .surah-info {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .ayat-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary-color);
+            position: relative;
+        }
+
+        .ayat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .ayat-number {
+            font-weight: bold;
+            color: var(--primary-color);
+            background: rgba(13, 148, 136, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .ayat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--subtext-color);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .arabic-text {
+            font-size: var(--arabic-font-size);
+            text-align: right;
+            direction: rtl;
+            font-family: 'Amiri', serif;
+            margin-bottom: 15px;
+            line-height: 2;
+        }
+
+        .latin-text {
+            font-style: italic;
+            color: var(--subtext-color);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .translation-text {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* 6. Tafsir Section */
+        .tafsir-box {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--subtext-color);
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: var(--primary-color);
+            display: none;
+            margin: 20px 0;
+        }
+
+        /* Hidden Canvas for Image Generator */
+        #canvas { display: none; }
+    </style>
+
+
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid font-quran"></i> Al-Quran Digital</h1>
+            <div class="header-actions">
+                <!-- 4. Bookmark Button -->
+                <button class="btn" onclick="goToBookmark()"><i class="fa-solid fa-bookmark"></i> Penanda</button>
+                <!-- 3. Dark Mode Toggle -->
+                <button class="btn" id="themeToggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+            </div>
+        </header>
+
+        <!-- 8. Ayat Hari Ini (Daily Verse) -->
+        <div class="daily-verse" id="dailyVerse">
+            <h3><i class="fa-solid fa-star"></i> Ayat Hari Ini</h3>
+            <div id="dailyContent">Memuatkan ayat hari ini...</div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="form-group">
+                <label>Pilih Surah</label>
+                <select id="surahSelect" onchange="fetchSurahDetail(this.value)">
+                    <option value="">-- Memuatkan... --</option>
+                </select>
+            </div>
+
+            <!-- 9. Pilihan Qari -->
+            <div class="form-group">
+                <label>Pilihan Qari (Audio)</label>
+                <select id="qariSelect" onchange="changeQari()">
+                    <option value="05">Mishary Rashid Alafasy</option>
+                    <option value="01">Abdullah Al-Juhany</option>
+                    <option value="02">Abdul Muhsin Al-Qasim</option>
+                </select>
+            </div>
+
+            <!-- 2. Carian Kata Kunci -->
+            <div class="form-group">
+                <label>Cari Ayat / Maksud</label>
+                <input type="text" id="searchInput" placeholder="Taip kata kunci..." onkeyup="filterAyat()">
+            </div>
+
+            <!-- 7. Saiz Font Arab -->
+            <div class="form-group">
+                <label>Saiz Tulisan Arab</label>
+                <div class="font-controls">
+                    <button class="btn" onclick="changeFontSize(-2)">A-</button>
+                    <button class="btn" onclick="changeFontSize(2)">A+</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuatkan data...</div>
+        <div id="surahInfo" class="surah-info"></div>
+        <div id="ayatContainer"></div>
+    </div>
+
+    <!-- Hidden Canvas untuk 10. Verse to Image Generator -->
+    <canvas id="canvas"></canvas>
+
+    <script>
+        let currentSurahData = null;
+        let selectedQari = "05"; 
+        let currentFontSize = 28;
+
+        // Init App
+        document.addEventListener('DOMContentLoaded', () => {
+            getSurahList();
+            getDailyVerse();
+            loadTheme();
+        });
+
+        // 3. Dark Mode
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+        }
+
+        function loadTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
+            }
+        }
+
+        // Fetch Senarai Surah
+        async function getSurahList() {
+            try {
+                const res = await fetch('https://equran.id/api/v2/surat');
+                const result = await res.json();
+                const surahSelect = document.getElementById('surahSelect');
+                surahSelect.innerHTML = '<option value="">-- Pilih Surah --</option>';
+                result.data.forEach(s => {
+                    surahSelect.innerHTML += `<option value="${s.nomor}">${s.nomor}. ${s.namaLatin} (${s.nama})</option>`;
+                });
+            } catch (err) { alert('Gagal memuatkan surah'); }
+        }
+
+        // Fetch Ayat & Detail
+        async function fetchSurahDetail(surahNum) {
+            if (!surahNum) return;
+            showLoading(true);
+            try {
+                const res = await fetch(`https://equran.id/api/v2/surat/${surahNum}`);
+                const result = await res.json();
+                currentSurahData = result.data;
+                renderSurah();
+            } catch (err) { alert('Gagal memuatkan ayat'); }
+            finally { showLoading(false); }
+        }
+
+        // Render Ayat ke UI
+        function renderSurah() {
+            const container = document.getElementById('ayatContainer');
+            const info = document.getElementById('surahInfo');
+            
+            info.style.display = 'block';
+            info.innerHTML = `<h2>${currentSurahData.namaLatin} (${currentSurahData.nama})</h2>
+                              <p>${currentSurahData.arti} | ${currentSurahData.jumlahAyat} Ayat</p>`;
+            
+            container.innerHTML = '';
+            currentSurahData.ayat.forEach(ayat => {
+                const audioUrl = ayat.audio[selectedQari];
+                container.innerHTML += `
+                    <div class="ayat-card" id="ayat-${ayat.nomorAyat}">
+                        <div class="ayat-header">
+                            <span class="ayat-number">Ayat ${ayat.nomorAyat}</span>
+                            <div class="ayat-actions">
+                                <!-- 1. Audio -->
+                                <button class="icon-btn" title="Main Audio" onclick="playAudio('${audioUrl}')"><i class="fa-solid fa-play"></i></button>
+                                <!-- 4. Bookmark -->
+                                <button class="icon-btn" title="Simpan Bookmark" onclick="saveBookmark(${currentSurahData.nomor}, ${ayat.nomorAyat})"><i class="fa-solid fa-bookmark"></i></button>
+                                <!-- 5. Copy & Share -->
+                                <button class="icon-btn" title="Salin" onclick="copyAyat('${ayat.teksArab}', '${ayat.teksIndonesia}')"><i class="fa-solid fa-copy"></i></button>
+                                <!-- 6. Toggle Tafsir -->
+                                <button class="icon-btn" title="Lihat Tafsir" onclick="toggleTafsir(${ayat.nomorAyat})"><i class="fa-solid fa-book-open"></i></button>
+                                <!-- 10. Card Generator -->
+                                <button class="icon-btn" title="Muat Turun Gambar" onclick="generateImage('${ayat.teksArab}', '${currentSurahData.namaLatin}:${ayat.nomorAyat}')"><i class="fa-solid fa-image"></i></button>
+                            </div>
+                        </div>
+                        <div class="arabic-text">${ayat.teksArab}</div>
+                        <div class="latin-text">${ayat.teksLatin}</div>
+                        <div class="translation-text">${ayat.teksIndonesia}</div>
+                        
+                        <!-- 6. Tafsir Box -->
+                        <div class="tafsir-box" id="tafsir-${ayat.nomorAyat}">
+                            <strong>Tafsir / Nota:</strong> Surah ${currentSurahData.namaLatin} ayat ke-${ayat.nomorAyat}. Diturunkan di ${currentSurahData.tempatTurun}.
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 1. Pemutar Audio
+        let currentAudio = null;
+        function playAudio(url) {
+            if (currentAudio) currentAudio.pause();
+            currentAudio = new Audio(url);
+            currentAudio.play();
+        }
+
+        // 9. Tukar Qari
+        function changeQari() {
+            selectedQari = document.getElementById('qariSelect').value;
+            if(currentSurahData) renderSurah();
+        }
+
+        // 2. Carian Filter Ayat
+        function filterAyat() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.ayat-card');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        // 4. Bookmark Logic
+        function saveBookmark(surah, ayat) {
+            localStorage.setItem('quran_bookmark', JSON.stringify({ surah, ayat }));
+            alert(`Berjaya disimpan: Surah ${surah}, Ayat ${ayat}`);
+        }
+
+        function goToBookmark() {
+            const b = JSON.parse(localStorage.getItem('quran_bookmark'));
+            if (!b) return alert('Tiada penanda buku disimpan.');
+            document.getElementById('surahSelect').value = b.surah;
+            fetchSurahDetail(b.surah).then(() => {
+                setTimeout(() => {
+                    const el = document.getElementById(`ayat-${b.ayat}`);
+                    if(el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            });
+        }
+
+        // 5. Salin & Kongsi
+        function copyAyat(arab, translation) {
+            const text = `${arab}\n\nMaksud: ${translation}`;
+            navigator.clipboard.writeText(text);
+            alert('Ayat berjaya disalin!');
+        }
+
+        // 6. Toggle Tafsir
+        function toggleTafsir(ayatNum) {
+            const box = document.getElementById(`tafsir-${ayatNum}`);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 7. Pelarasan Font
+        function changeFontSize(delta) {
+            currentFontSize += delta;
+            document.documentElement.style.setProperty('--arabic-font-size', `${currentFontSize}px`);
+        }
+
+        // 8. Daily Verse (Rawak)
+        async function getDailyVerse() {
+            try {
+                // Pilih surah 1 (Al-Fatihah) secara lalai untuk paparan awal
+                const res = await fetch('https://equran.id/api/v2/surat/1');
+                const data = await res.json();
+                const ayat = data.data.ayat[0];
+                document.getElementById('dailyContent').innerHTML = `
+                    <p style="font-family:'Amiri'; font-size: 22px;">${ayat.teksArab}</p>
+                    <p style="font-size: 14px; margin-top:5px;">"${ayat.teksIndonesia}" - <strong>[Al-Fatiha: 1]</strong></p>
+                `;
+            } catch(e) {}
+        }
+
+        // 10. Generate Card Image (Canvas)
+        function generateImage(textArab, reference) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 400;
+
+            // Background
+            ctx.fillStyle = '#0d9488';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Frame
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+            // Text Arab
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '30px Amiri';
+            ctx.textAlign = 'center';
+            ctx.fillText(textArab, canvas.width / 2, 180);
+
+            // Reference
+            ctx.font = '20px Segoe UI';
+            ctx.fillText(reference, canvas.width / 2, 300);
+
+            // Download Link
+            const link = document.createElement('a');
+            link.download = `ayat-${reference}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+    </script>
+
+<script src="./script.js"></script></body></html>
