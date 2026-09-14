@@ -72,11 +72,18 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 15px 20px;
+            padding: 20px 20px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .header-subtitle {
+            color: #fde047;
+            font-size: 15px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
         }
 
         nav {
@@ -121,13 +128,18 @@
         }
 
         /* STYLES UNTUK AL-QURAN & AUDIO */
-        .select-box {
+        .select-box, .text-input-box {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
             font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
+        }
+
+        textarea.text-input-box {
+            height: 100px;
+            resize: vertical;
         }
 
         .ayah-card {
@@ -171,6 +183,53 @@
             margin-bottom: 8px;
         }
 
+        /* GENERATE IMAGE SECTION STYLES */
+        .btn-create {
+            background-color: #1b4332;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-create:hover {
+            background-color: #2d6a4f;
+        }
+
+        .btn-download {
+            background-color: #52b788;
+            color: #081c15;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background-color: #40916c;
+            color: white;
+        }
+
+        .canvas-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
         /* FOOTER */
         footer {
             text-align: center;
@@ -195,6 +254,7 @@
     <!-- HEADER & MENU NAVIGATION -->
     <header>
         <h1>Portal Islamik Al-Quran &amp; Hadis</h1>
+        <p class="header-subtitle">Panduan Lengkap Bacaan, Audio, Tafsir, Hadis &amp; Tajwid Interaktif</p>
     </header>
 
     <nav>
@@ -203,6 +263,8 @@
         <button class="nav-btn" onclick="openTab(event, 'hadith-tab')">Hadis Shahih Bukhari</button>
         <button class="nav-btn" onclick="openTab(event, 'tajwid-tab')">Pembelajaran Tajwid</button>
         <button class="nav-btn" onclick="openTab(event, 'learn-tab')">Asas Asas Al-Quran</button>
+        <!-- TAB BARU: GENERATE IMAGE -->
+        <button class="nav-btn" onclick="openTab(event, 'image-gen-tab')">Generate a image Quran surah</button>
     </nav>
 
     <div class="container">
@@ -252,6 +314,14 @@
             <button onclick="loadRandomHadith()" style="padding: 10px 15px; background: #2d6a4f; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px;">
                 🔀 Papar Hadis Rawak
             </button>
+
+            <!-- CARI HADIS MENGIKUT NOMBOR -->
+            <div style="margin-top: 5px; margin-bottom: 15px;">
+                <input type="number" id="hadith-num-input" placeholder="Masukkan No. Hadis (1-6)" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">
+                <button onclick="loadSpecificHadith()" style="padding: 8px 15px; background: #1b4332; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Cari Hadis
+                </button>
+            </div>
 
             <div id="hadith-container">
                 <div class="lesson-card">
@@ -318,14 +388,78 @@
             </div>
         </div>
 
+        <!-- TAB 6: GENERATE A IMAGE QURAN SURAH -->
+        <div id="image-gen-tab" class="tab-content">
+            <h2>Generate Image Quran Surah</h2>
+            <p>Pilih surah atau tuliskan teks ayat Quran untuk dijadikan gambar kad islamik yang cantik:</p><br>
+
+            <label>Pilih Surah (Opsional):</label>
+            <select id="gen-surah-select" class="select-box" onchange="autoFillSurahText()">
+                <option value="">-- Pilih Surah Untuk Auto-Isi Teks --</option>
+            </select>
+
+            <label>Masukkan Teks Ayat Quran / Terjemahan:</label>
+            <textarea id="gen-text-input" class="text-input-box" placeholder="Contoh: Bismillahir Rahmanir Rahim / Masa itu Emas"></textarea>
+
+            <label>Pilih Tema Warna Kad:</label>
+            <select id="gen-theme-select" class="select-box">
+                <option value="emerald">Emerald Green (Hijau Islamik &amp; Emas)</option>
+                <option value="darknavy">Dark Navy Blue (Biru Gelap &amp; Perak)</option>
+                <option value="maroon">Royal Maroon (Merah Hati &amp; Emas)</option>
+            </select>
+
+            <button class="btn-create" onclick="generateQuranImage()">Create now</button>
+
+            <div class="canvas-preview" id="canvas-preview-area" style="display: none;">
+                <h3>Hasil Gambar Surah:</h3><br>
+                <canvas id="quran-canvas" width="800" height="500"></canvas>
+                <br>
+                <a id="download-link" class="btn-download" download="Quran_Surah_Card.png">📥 Download Gambar</a>
+            </div>
+        </div>
+
     </div>
 
     <footer>
         <p>© 2026 Portal Islamik Al-Quran &amp; Hadis. Dibuat dengan HTML, CSS &amp; JS.</p>
     </footer>
 
-    <!-- JAVASCRIPT (LOGIK UNTUK LOADING, TAB, API AL-QURAN & HADIS) -->
+    <!-- JAVASCRIPT (LOGIK UNTUK LOADING, TAB, API AL-QURAN, HADIS & GENERATE IMAGE) -->
     <script>
+        // --- SENARAI HADIS OFFLINE ---
+        const senaraiHadith = [
+            {
+                no: 1,
+                arab: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ",
+                maksud: "Sesungguhnya setiap amalan itu bergantung kepada niatnya."
+            },
+            {
+                no: 2,
+                arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
+                maksud: "Sebaik-baik kamu ialah orang yang mempelajari Al-Quran dan mengajarkannya."
+            },
+            {
+                no: 3,
+                arab: "لاَ يَدْخُلُ الْجَنَّةَ قَاطِعٌ",
+                maksud: "Tidak masuk syurga orang yang memutuskan tali silaturahim."
+            },
+            {
+                no: 4,
+                arab: "الدِّينُ النَّصِيحَةُ",
+                maksud: "Agama itu adalah nasihat."
+            },
+            {
+                no: 5,
+                arab: "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
+                maksud: "Barangsiapa yang beriman kepada Allah dan hari akhirat, maka hendaklah dia berkata baik atau diam."
+            },
+            {
+                no: 6,
+                arab: "مَنْ صَلَّى عَلَيَّ وَاحِدَةً صَلَّى اللَّهُ عَلَيْهِ عَشْرًا",
+                maksud: "Barangsiapa bershalawat kepadaku satu kali, maka Allah akan bershalawat kepadanya sepuluh kali."
+            }
+        ];
+
         // --- 1. SIMULASI LOADING SCREEN 0% - 100% ---
         window.addEventListener('DOMContentLoaded', () => {
             let percentage = 0;
@@ -333,9 +467,8 @@
             const percentageText = document.getElementById('percentage-text');
             const loaderScreen = document.getElementById('loader-screen');
 
-            // Interval simulasi loading
             const interval = setInterval(() => {
-                percentage += 2; // kelajuan naik
+                percentage += 2;
                 progressBar.style.width = percentage + '%';
                 percentageText.innerText = percentage + '%';
 
@@ -344,11 +477,10 @@
                     setTimeout(() => {
                         loaderScreen.style.opacity = '0';
                         loaderScreen.style.visibility = 'hidden';
-                    }, 300); // hilangkan loader
+                    }, 300);
                 }
-            }, 30); // 30ms
+            }, 30);
 
-            // Load Senarai Surah apabila mula
             populateSurahList();
             loadRandomHadith();
         });
@@ -366,14 +498,14 @@
             }
 
             document.getElementById(tabId).classList.add("active");
-                evt.currentTarget.classList.add("active");
+            evt.currentTarget.classList.add("active");
         }
 
         // --- 3. FUNGSI API AL-QURAN ---
-        // Populasikan Dropdown Surah (1-114)
         async function populateSurahList() {
             const surahSelect = document.getElementById('surah-select');
             const tafsirSurahSelect = document.getElementById('tafsir-surah-select');
+            const genSurahSelect = document.getElementById('gen-surah-select');
 
             try {
                 const response = await fetch('https://api.alquran.cloud/v1/surah');
@@ -389,9 +521,13 @@
                     option2.value = surah.number;
                     option2.text = `${surah.number}. ${surah.englishName} (${surah.name})`;
                     tafsirSurahSelect.appendChild(option2);
+
+                    let option3 = document.createElement('option');
+                    option3.value = surah.number;
+                    option3.text = `${surah.number}. ${surah.englishName} (${surah.name})`;
+                    genSurahSelect.appendChild(option3);
                 });
 
-                // Load Surah 1 (Al-Fatiha) secara automatik
                 loadQuranAyahs();
                 loadTafsir();
             } catch (err) {
@@ -399,7 +535,6 @@
             }
         }
 
-        // Load Surah, Audio Qari & Terjemahan
         async function loadQuranAyahs() {
             const surahNum = document.getElementById('surah-select').value || 1;
             const qari = document.getElementById('qari-select').value;
@@ -408,11 +543,9 @@
             quranContainer.innerHTML = "<p style='text-align:center;'>Sedang memuatkan ayat Al-Quran...</p>";
 
             try {
-                // Ambil Audio & Teks Arab
                 const audioRes = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${qari}`);
                 const audioData = await audioRes.json();
 
-                // Ambil Terjemahan (Bahasa Indonesia / Malay)
                 const transRes = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/id.indonesian`);
                 const transData = await transRes.json();
 
@@ -470,54 +603,115 @@
         }
 
         // --- 5. FUNGSI HADIS BUKHARI ---
-        const senaraiHadith = [
-    {
-        no: 1,
-        arab: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ",
-        maksud: "Sesungguhnya setiap amalan itu bergantung kepada niatnya."
-    },
-    {
-        no: 2,
-        arab: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
-        maksud: "Sebaik-baik kamu ialah orang yang mempelajari Al-Quran dan mengajarkannya."
-    },
-    {
-        no: 3,
-        arab: "لاَ يَدْخُلُ الْجَنَّةَ قَاطِعٌ",
-        maksud: "Tidak masuk syurga orang yang memutuskan tali silaturahim."
-    },
-    {
-        no: 4,
-        arab: "الدِّينُ النَّصِيحَةُ",
-        maksud: "Agama itu adalah nasihat."
-    },
-    {
-        no: 5,
-        arab: "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
-        maksud: "Barangsiapa yang beriman kepada Allah dan hari akhirat, maka hendaklah dia berkata baik atau diam."
-    },
-    {
-      no: 6,
-      arab: "مَنْ صَلَّى عَلَيَّ وَاحِدَةً صَلَّى اللَّهُ عَلَيْهِ عَشْرًا",
-      maksud: "Barangsiapa bershalawat kepadaku satu kali, maka Allah akan bershalawat kepadanya sepuluh kali."
-    }
-];
+        function loadRandomHadith() {
+            const hadithContainer = document.getElementById('hadith-container');
+            const randomIndex = Math.floor(Math.random() * senaraiHadith.length);
+            const item = senaraiHadith[randomIndex];
 
-function loadRandomHadith() {
-    const hadithContainer = document.getElementById('hadith-container');
-    
-    // Pilih satu hadis secara rawak daripada senarai di atas
-    const randomIndex = Math.floor(Math.random() * senaraiHadith.length);
-    const item = senaraiHadith[randomIndex];
+            hadithContainer.innerHTML = `
+                <div class="lesson-card">
+                    <h3>Hadis Sahih Bukhari No: ${item.no}</h3>
+                    <div class="arabic-text">${item.arab}</div>
+                    <p class="translation"><b>Pengajaran / Terjemahan:</b> ${item.maksud}</p>
+                </div>
+            `;
+        }
 
-    hadithContainer.innerHTML = `
-        <div class="lesson-card">
-            <h3>Hadis Sahih Bukhari No: ${item.no}</h3>
-            <div class="arabic-text">${item.arab}</div>
-            <p class="translation"><b>Pengajaran / Terjemahan:</b> ${item.maksud}</p>
-        </div>
-    `;
-}
+        function loadSpecificHadith() {
+            const inputNum = document.getElementById('hadith-num-input').value;
+            const hadithContainer = document.getElementById('hadith-container');
+
+            if (!inputNum || inputNum < 1) {
+                alert("Sila masukkan nombor hadis yang sah!");
+                return;
+            }
+
+            const item = senaraiHadith.find(h => h.no == inputNum);
+
+            if (item) {
+                hadithContainer.innerHTML = `
+                    <div class="lesson-card">
+                        <h3>Hadis Sahih Bukhari No: ${item.no}</h3>
+                        <div class="arabic-text">${item.arab}</div>
+                        <p class="translation"><b>Pengajaran / Terjemahan:</b> ${item.maksud}</p>
+                    </div>
+                `;
+            } else {
+                hadithContainer.innerHTML = `<p style="color:red;">Hadis nombor ${inputNum} belum ditambah ke dalam senarai.</p>`;
+            }
+        }
+
+        // --- 6. FUNGSI GENERATE IMAGE QURAN SURAH ---
+        async function autoFillSurahText() {
+            const surahNum = document.getElementById('gen-surah-select').value;
+            const textInput = document.getElementById('gen-text-input');
+
+            if (!surahNum) return;
+
+            try {
+                textInput.value = "Sedang mengambil ayat surah...";
+                const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
+                const data = await res.json();
+                const firstAyah = data.data.ayahs[0].text;
+                textInput.value = `${firstAyah}\n\n(Surah ${data.data.englishName})`;
+            } catch (e) {
+                textInput.value = "";
+            }
+        }
+
+        function generateQuranImage() {
+            const userText = document.getElementById('gen-text-input').value.trim();
+            const theme = document.getElementById('gen-theme-select').value;
+            const canvas = document.getElementById('quran-canvas');
+            const ctx = canvas.getContext('2d');
+            const previewArea = document.getElementById('canvas-preview-area');
+            const downloadLink = document.getElementById('download-link');
+
+            if (!userText) {
+                alert("Sila masukkan teks tulisan terlebih dahulu!");
+                return;
+            }
+
+            // Tetapan Tema Latar Belakang & Warna Teks
+            let bgColor1 = "#1b4332", bgColor2 = "#081c15", textColor = "#fde047", borderColor = "#52b788";
+            if (theme === 'darknavy') {
+                bgColor1 = "#0f172a"; bgColor2 = "#020617"; textColor = "#e2e8f0"; borderColor = "#38bdf8";
+            } else if (theme === 'maroon') {
+                bgColor1 = "#4c0519"; bgColor2 = "#1c0108"; textColor = "#fde047"; borderColor = "#fb7185";
+            }
+
+            // Lukis Gradient Background
+            let gradient = ctx.createRadialGradient(400, 250, 50, 400, 250, 450);
+            gradient.addColorStop(0, bgColor1);
+            gradient.addColorStop(1, bgColor2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Lukis Bingkai Islamik Double Line
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(28, 28, canvas.width - 56, canvas.height - 56);
+
+            // Lukis Teks
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '26px "Amiri", "Traditional Arabic", Segoe UI, sans-serif';
+
+            // Pecahkan Teks kepada Beberapa Baris jika Panjang
+            const lines = userText.split('\n');
+            let startY = 250 - ((lines.length - 1) * 20);
+
+            lines.forEach((line, i) => {
+                ctx.fillText(line, 400, startY + (i * 45));
+            });
+
+            // Papar Canvas & Sediakan Pautan Download
+            previewArea.style.display = 'block';
+            downloadLink.href = canvas.toDataURL('image/png');
+        }
     </script>
 
 <script src="./script.js"></script></body></html>
